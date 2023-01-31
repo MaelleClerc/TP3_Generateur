@@ -62,6 +62,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "system/common/sys_common.h"
 #include "app.h"
 #include "system_definitions.h"
+#include "GesPec12.h"
+#include "Generateur.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -73,11 +75,32 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 void __ISR(_TIMER_1_VECTOR, ipl3AUTO) IntHandlerDrvTmrInstance0(void)
 {
+    static int16_t compteur_cycle = 0;
+    
     PLIB_INT_SourceFlagClear(INT_ID_0,INT_SOURCE_TIMER_1);
+    
+    ScanPec12(PLIB_PORTS_PinGet(PEC12_A_BIT, PORT_CHANNEL_E, PORTS_BIT_POS_8), 
+              PLIB_PORTS_PinGet(PEC12_B_BIT, PORT_CHANNEL_E, PORTS_BIT_POS_9), 
+              PLIB_PORTS_PinGet(PEC12_PB_BIT, PORT_CHANNEL_D, PORTS_BIT_POS_7));
+    BSP_LEDToggle(BSP_LED_1);
+    
+    // Apres 3s
+    if (compteur_cycle == 3000)
+    {
+        // On change l'etat pour SERVICE_TASKS tous les 10 cycles
+        APP_UpdateState(APP_STATE_SERVICE_TASKS);
+        compteur_cycle = 2990;
+    }
+    
+    compteur_cycle++;
 }
 void __ISR(_TIMER_3_VECTOR, ipl7AUTO) IntHandlerDrvTmrInstance1(void)
 {
     PLIB_INT_SourceFlagClear(INT_ID_0,INT_SOURCE_TIMER_3);
+    
+    LED0_W = 1;
+    GENSIG_Execute();
+    LED0_W = 0;
 }
  /*******************************************************************************
  End of File
