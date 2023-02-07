@@ -27,6 +27,7 @@
 
 #include "GesPec12.h"
 #include "Mc32Debounce.h"
+#include "Mc32DriverLcd.h"
 
 // Descripteur des sinaux
 S_SwitchDescriptor DescrA;
@@ -69,24 +70,22 @@ S_Pec12_Descriptor Pec12;
 
 void ScanPec12 (bool ValA, bool ValB, bool ValPB)
 {
-    // Variables locales
-    static Old_ValA = 0;
-    static Old_ValB = 0;
-    static Old_ValPB = 0;
-    
     // Traitement antirebond sur A, B et PB
     DoDebounce (&DescrA, ValA);
     DoDebounce (&DescrB, ValB);
     DoDebounce (&DescrPB, ValPB);
+    
 
     // Detection increment / decrement
     // Rotation a droite
-    if (((Old_ValB == 0) && (ValB == 1) && (ValA == 1)) || ((Old_ValB == 1) && (ValB == 0) && (ValA == 0)))
+    if (((DescrB.bits.KeyPrevInputValue == 0) && (DescrB.bits.KeyValue == 1) && (DescrA.bits.KeyValue == 1)) || 
+        ((DescrB.bits.KeyPrevInputValue == 1) && (DescrB.bits.KeyValue == 0) && (DescrA.bits.KeyValue == 0)))
     {
         Pec12.Inc = 1;
     }
     // Rotation a gauche
-    else if (((Old_ValB == 0) && (ValB == 1) && (ValA == 0)) || ((Old_ValB == 1) && (ValB == 0) && (ValA == 1)))
+    else if (((DescrB.bits.KeyPrevInputValue == 0) && (DescrB.bits.KeyValue == 1) && (DescrA.bits.KeyValue == 0)) || 
+             ((DescrB.bits.KeyPrevInputValue == 1) && (DescrB.bits.KeyValue == 0) && (DescrA.bits.KeyValue == 1)))
     {
         Pec12.Dec = 1;
     }
@@ -96,16 +95,9 @@ void ScanPec12 (bool ValA, bool ValB, bool ValPB)
         Pec12.Dec = 0;
     }
 
-
     // Traitement du PushButton
 
-
     // Gestion inactivite
-
-    // Memorisation des anciennes valeurs du PEC12 pour detecter les flancs
-    Old_ValA = ValA;
-    Old_ValB = ValB;
-    Old_ValPB = ValPB;
    
  } // ScanPec12
 

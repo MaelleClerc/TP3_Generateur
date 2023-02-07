@@ -79,9 +79,6 @@ void __ISR(_TIMER_1_VECTOR, ipl3AUTO) IntHandlerDrvTmrInstance0(void)
     
     PLIB_INT_SourceFlagClear(INT_ID_0,INT_SOURCE_TIMER_1);
     
-    ScanPec12(PLIB_PORTS_PinGet(PEC12_A_BIT, PORT_CHANNEL_E, PORTS_BIT_POS_8), 
-              PLIB_PORTS_PinGet(PEC12_B_BIT, PORT_CHANNEL_E, PORTS_BIT_POS_9), 
-              PLIB_PORTS_PinGet(PEC12_PB_BIT, PORT_CHANNEL_D, PORTS_BIT_POS_7));
     BSP_LEDToggle(BSP_LED_1);
     
     // Apres 3s
@@ -90,6 +87,10 @@ void __ISR(_TIMER_1_VECTOR, ipl3AUTO) IntHandlerDrvTmrInstance0(void)
         // On change l'etat pour SERVICE_TASKS tous les 10 cycles
         APP_UpdateState(APP_STATE_SERVICE_TASKS);
         compteur_cycle = 2990;
+        
+        ScanPec12(PLIB_PORTS_PinGet(PEC12_A_BIT, PORT_CHANNEL_E, PORTS_BIT_POS_8), 
+              PLIB_PORTS_PinGet(PEC12_B_BIT, PORT_CHANNEL_E, PORTS_BIT_POS_9), 
+              PLIB_PORTS_PinGet(PEC12_PB_BIT, PORT_CHANNEL_D, PORTS_BIT_POS_7));
     }
     
     compteur_cycle++;

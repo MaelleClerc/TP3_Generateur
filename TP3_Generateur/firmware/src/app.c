@@ -161,10 +161,18 @@ void APP_Tasks ( void )
             // Initialisation du generateur
             GENSIG_Initialize(&LocalParamGen);
             
-            printf_lcd("Canevas Tp3       ");
-            // A adapter pour les 2 noms sur 2 lignes
+            // Affichage a l'initialisation
+            printf_lcd("TP3 Generateur");
             lcd_gotoxy(1,2);
-            printf_lcd("C. Huber 03.02.2016");
+            printf_lcd("Santiago Valiante");
+            lcd_gotoxy(1,3);
+            printf_lcd("Maelle Clerc");
+            
+            lcd_ClearLine(1);
+            lcd_ClearLine(2);
+            lcd_ClearLine(3);
+            lcd_ClearLine(4);
+
 
             // Active les timers 
             DRV_TMR0_Start();
