@@ -70,6 +70,10 @@ S_Pec12_Descriptor Pec12;
 
 void ScanPec12 (bool ValA, bool ValB, bool ValPB)
 {
+    // Variables locales
+    static uint8_t Compteur_Pression = 0;
+    static uint32_t Compteur_Inactivite = 0;
+    
     // Traitement antirebond sur A, B et PB
     DoDebounce (&DescrA, ValA);
     DoDebounce (&DescrB, ValB);
@@ -96,8 +100,48 @@ void ScanPec12 (bool ValA, bool ValB, bool ValPB)
     }
 
     // Traitement du PushButton
+    // Si le bouton est presse
+    if (DescrPB.bits.KeyValue == 1)
+    {
+        // On incremente un compteur tant que le bouton est presse
+        Compteur_Pression ++;
+    }
+    // Si le bouton est relache avant 500ms (cette fonction est appelee toutes les 10ms)
+    else if (Compteur_Pression < 50)
+    {
+        Pec12.OK = 1;
+    }
+    // Si le bouton est relache a partir de 500ms
+    else if (Compteur_Pression >= 50)
+    {
+        Pec12.ESC = 1;
+    }
+    else
+    {
+        Pec12.OK = 0;
+        Pec12.ESC = 0;
+        Compteur_Pression = 0;
+    }
 
     // Gestion inactivite
+    // Si rien n'a ete touche
+    if ((DescrA.bits.KeyValue == 0) && (DescrB.bits.KeyValue == 0) && (DescrPB.bits.KeyValue == 0))
+    {
+        Compteur_Inactivite ++;
+        
+        // Si cela fait 5s que rien ne s'est passe (5s, appel toutes les 10ms => 5*60*100 = 30000)
+        if(Compteur_Inactivite == 30000)
+        {
+            // On eteint le backlight du LCD
+            lcd_bl_off();
+        }
+    }
+    else
+    {
+        // On rallume le backlight du LCD
+        lcd_bl_on();
+        Compteur_Inactivite = 0;
+    }
    
  } // ScanPec12
 
