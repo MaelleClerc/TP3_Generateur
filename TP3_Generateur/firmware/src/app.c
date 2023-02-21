@@ -167,16 +167,11 @@ void APP_Tasks ( void )
             printf_lcd("Santiago Valiante");
             lcd_gotoxy(1,3);
             printf_lcd("Maelle Clerc");
-            
-            lcd_ClearLine(1);
-            lcd_ClearLine(2);
-            lcd_ClearLine(3);
-            lcd_ClearLine(4);
-
 
             // Active les timers 
             DRV_TMR0_Start();
             DRV_TMR1_Start();
+            
             appData.state = APP_STATE_WAIT;
             break;
         }
