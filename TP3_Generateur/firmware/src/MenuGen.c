@@ -313,8 +313,9 @@ void MENU_Execute(S_ParamGen *pParam)
             }
             
             break;
-            
     }
+    
+    // Gestion de l'affichage
 }
 
 
