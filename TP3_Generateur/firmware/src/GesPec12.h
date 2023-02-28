@@ -44,6 +44,9 @@ typedef struct {
             uint16_t InactivityDuration;   // Pour durée inactivité
 } S_Pec12_Descriptor;
 
+// Variables globales
+extern S_Pec12_Descriptor Pec12;
+
 
 
 
