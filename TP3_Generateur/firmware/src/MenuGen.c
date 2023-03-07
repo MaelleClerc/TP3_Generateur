@@ -10,6 +10,7 @@
 #include <stdbool.h>
 #include "MenuGen.h"
 #include "GesPec12.h"
+#include "Mc32DriverLcd.h"
 
 MENU_STATES MENU_DATA;
 
@@ -37,16 +38,25 @@ void MENU_Execute(S_ParamGen *pParam)
     
     switch (MENU_DATA)
     {
+////////////////////////////////////////////////////////////////////////////////
         case MENU_STATE_FORME:
+            
+            // Gestion de l'affichage
+            lcd_gotoxy(1, 1);
+            printf_lcd("*Forme = %6d", pParam->Forme);
             
             // Gestion de la sortie de l'etat
             if (Pec12.Inc == 1)
             {
                 MENU_DATA = MENU_STATE_FREQUENCE;
+                lcd_gotoxy(1, 1);
+                printf_lcd(" Forme = %6d", pParam->Forme);
             }
             else if (Pec12.Dec == 1)
             {
                 MENU_DATA = MENU_STATE_OFFSET;
+                lcd_gotoxy(1, 1);
+                printf_lcd(" Forme = %6d", pParam->Forme);
             }
             else if (Pec12.OK == 1)
             {
@@ -55,7 +65,12 @@ void MENU_Execute(S_ParamGen *pParam)
             
             break;
             
+////////////////////////////////////////////////////////////////////////////////
         case MENU_STATE_FORME_VALUE:
+            
+            // Gestion de l'affichage
+            lcd_gotoxy(1, 1);
+            printf_lcd("*Forme = %6d", MenuFormes[CompteurForme]);
             
             if (Pec12.Inc == 1)
             {
@@ -126,16 +141,25 @@ void MENU_Execute(S_ParamGen *pParam)
             
             break;
             
+////////////////////////////////////////////////////////////////////////////////
         case MENU_STATE_FREQUENCE:
+            
+            // Gestion de l'affichage
+            lcd_gotoxy(1, 2);
+            printf_lcd("*Freq [Hz] = %4d", pParam->Frequence);
             
             // Gestion de la sortie de l'etat
             if (Pec12.Inc == 1)
             {
                 MENU_DATA = MENU_STATE_AMPLITUDE;
+                lcd_gotoxy(1, 2);
+                printf_lcd(" Freq [Hz] = %4d", pParam->Frequence);
             }
             else if (Pec12.Dec == 1)
             {
                 MENU_DATA = MENU_STATE_FORME;
+                lcd_gotoxy(1, 2);
+                printf_lcd(" Freq [Hz] = %4d", pParam->Frequence);
             }
             else if (Pec12.OK == 1)
             {
@@ -144,7 +168,12 @@ void MENU_Execute(S_ParamGen *pParam)
             
             break;
             
+////////////////////////////////////////////////////////////////////////////////
         case MENU_STATE_FREQUENCE_VALUE:
+            
+            // Gestion de l'affichage
+            lcd_gotoxy(1, 2);
+            printf_lcd("*Freq [Hz] = %4d", Frequence_Selection);
             
             if (Pec12.Inc == 1)
             {
@@ -190,16 +219,25 @@ void MENU_Execute(S_ParamGen *pParam)
             
             break;
             
+////////////////////////////////////////////////////////////////////////////////
         case MENU_STATE_AMPLITUDE:
+            
+            // Gestion de l'affichage
+            lcd_gotoxy(1, 3);
+            printf_lcd("*Ampl [mV] = %5d", pParam->Amplitude);
             
             // Gestion de la sortie de l'etat
             if (Pec12.Inc == 1)
             {
                 MENU_DATA = MENU_STATE_OFFSET;
+                lcd_gotoxy(1, 3);
+                printf_lcd(" Ampl [mV] = %5d", pParam->Amplitude);
             }
             else if (Pec12.Dec == 1)
             {
                 MENU_DATA = MENU_STATE_FREQUENCE;
+                lcd_gotoxy(1, 3);
+                printf_lcd(" Ampl [mV] = %5d", pParam->Amplitude);
             }
             else if (Pec12.OK == 1)
             {
@@ -208,7 +246,12 @@ void MENU_Execute(S_ParamGen *pParam)
             
             break;
             
+////////////////////////////////////////////////////////////////////////////////
         case MENU_STATE_AMPLITUDE_VALUE:
+            
+            // Gestion de l'affichage
+            lcd_gotoxy(1, 3);
+            printf_lcd("*Ampl [mV] = %5d", Amplitude_Selection);
             
             if (Pec12.Inc == 1)
             {
@@ -253,17 +296,26 @@ void MENU_Execute(S_ParamGen *pParam)
             }
             
             break;
-            
+
+////////////////////////////////////////////////////////////////////////////////
         case MENU_STATE_OFFSET:
+            
+            // Gestion de l'affichage
+            lcd_gotoxy(1, 4);
+            printf_lcd("*Offset [mV] = %5d", pParam->Offset);
             
             // Gestion de la sortie de l'etat
             if (Pec12.Inc == 1)
             {
                 MENU_DATA = MENU_STATE_FORME;
+                lcd_gotoxy(1, 4);
+                printf_lcd(" Offset [mV] = %5d", pParam->Offset);
             }
             else if (Pec12.Dec == 1)
             {
                 MENU_DATA = MENU_STATE_AMPLITUDE;
+                lcd_gotoxy(1, 4);
+                printf_lcd(" Offset [mV] = %5d", pParam->Offset);
             }
             else if (Pec12.OK == 1)
             {
@@ -272,7 +324,12 @@ void MENU_Execute(S_ParamGen *pParam)
             
             break;
             
+////////////////////////////////////////////////////////////////////////////////
         case MENU_STATE_OFFSET_VALUE:
+            
+            // Gestion de l'affichage
+            lcd_gotoxy(1, 4);
+            printf_lcd("*Offset [mV] = %5d", Offset_Selection);
             
             if (Pec12.Inc == 1)
             {
@@ -314,8 +371,6 @@ void MENU_Execute(S_ParamGen *pParam)
             
             break;
     }
-    
-    // Gestion de l'affichage
 }
 
 
