@@ -103,29 +103,33 @@ void ScanPec12 (bool ValA, bool ValB, bool ValPB)
     // Si le bouton est presse
     if (DescrPB.bits.KeyValue == 1)
     {
+        Pec12.OK = 0;
+        Pec12.ESC = 1;
+        Compteur_Pression = 0;
+    }
+    else if (DescrPB.bits.KeyValue == 0)
+    {
         // On incremente un compteur tant que le bouton est presse
         Compteur_Pression ++;
     }
     // Si le bouton est relache avant 500ms (cette fonction est appelee toutes les 10ms)
-    else if (Compteur_Pression < 50)
+    if ((Compteur_Pression < 50) && (DescrPB.bits.KeyValue == 0))
     {
         Pec12.OK = 1;
+        Pec12.ESC = 0;
+        Compteur_Pression = 0;
     }
     // Si le bouton est relache a partir de 500ms
-    else if (Compteur_Pression >= 50)
+    else if ((Compteur_Pression >= 50) && (DescrPB.bits.KeyValue == 0))
     {
         Pec12.ESC = 1;
-    }
-    else
-    {
         Pec12.OK = 0;
-        Pec12.ESC = 0;
         Compteur_Pression = 0;
     }
 
     // Gestion inactivite
     // Si rien n'a ete touche
-    if ((DescrA.bits.KeyValue == 0) && (DescrB.bits.KeyValue == 0) && (DescrPB.bits.KeyValue == 0))
+    if ((DescrA.bits.KeyValue == 0) && (DescrB.bits.KeyValue == 0) && (DescrPB.bits.KeyValue == 1))
     {
         Compteur_Inactivite ++;
         

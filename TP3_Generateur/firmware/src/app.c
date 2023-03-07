@@ -184,6 +184,7 @@ void APP_Tasks ( void )
 
             // Execution du menu
             MENU_Execute(&LocalParamGen);
+            
             appData.state = APP_STATE_WAIT;
          break;
         /* TODO: implement your application state machine.*/

@@ -68,9 +68,11 @@ void MENU_Execute(S_ParamGen *pParam)
 ////////////////////////////////////////////////////////////////////////////////
         case MENU_STATE_FORME_VALUE:
             
+            Pec12.OK = 0;
+            
             // Gestion de l'affichage
             lcd_gotoxy(1, 1);
-            printf_lcd("*Forme = %6d", MenuFormes[CompteurForme]);
+            printf_lcd("*Forme = %6c", MenuFormes[CompteurForme]);
             
             if (Pec12.Inc == 1)
             {
@@ -171,6 +173,8 @@ void MENU_Execute(S_ParamGen *pParam)
 ////////////////////////////////////////////////////////////////////////////////
         case MENU_STATE_FREQUENCE_VALUE:
             
+            Pec12.OK = 0;
+            
             // Gestion de l'affichage
             lcd_gotoxy(1, 2);
             printf_lcd("*Freq [Hz] = %4d", Frequence_Selection);
@@ -249,6 +253,8 @@ void MENU_Execute(S_ParamGen *pParam)
 ////////////////////////////////////////////////////////////////////////////////
         case MENU_STATE_AMPLITUDE_VALUE:
             
+            Pec12.OK = 0;
+            
             // Gestion de l'affichage
             lcd_gotoxy(1, 3);
             printf_lcd("*Ampl [mV] = %5d", Amplitude_Selection);
@@ -326,6 +332,8 @@ void MENU_Execute(S_ParamGen *pParam)
             
 ////////////////////////////////////////////////////////////////////////////////
         case MENU_STATE_OFFSET_VALUE:
+            
+            Pec12.OK = 0;
             
             // Gestion de l'affichage
             lcd_gotoxy(1, 4);
