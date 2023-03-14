@@ -12,6 +12,7 @@
 #include "GesPec12.h"
 #include "Mc32DriverLcd.h"
 #include "Generateur.h"
+#include "bsp.h"
 
 MENU_STATES MENU_DATA;
 

@@ -70,6 +70,9 @@ S_Pec12_Descriptor Pec12;
 
 void ScanPec12 (bool ValA, bool ValB, bool ValPB)
 {
+    // Variables locales
+    static uint16_t Compteur_Pression = 0;
+    
     // Traitement antirebond sur A, B et PB
     DoDebounce (&DescrA, ValA);
     DoDebounce (&DescrB, ValB);
@@ -105,25 +108,23 @@ void ScanPec12 (bool ValA, bool ValB, bool ValPB)
     {
         Pec12.OK = 0;
         Pec12.ESC = 0;
-        Pec12.PressDuration ++;
+        Compteur_Pression ++;
     }
     
     // Si le bouton est relache
     if (DescrPB.bits.KeyValue == 0)
     {
         // apres 500ms
-        if (Pec12.PressDuration >= 500)
+        if (Compteur_Pression >= 500)
         {
             Pec12.ESC = 1;
-            Pec12.OK = 0;
-            Pec12.PressDuration = 0;
+            Compteur_Pression = 0;
         }
         else
         {
             // Si il est relache avant
             Pec12.OK = 1;
-            Pec12.ESC = 0;
-            Pec12.PressDuration = 0;
+            Compteur_Pression = 0;
         }
     }
 
