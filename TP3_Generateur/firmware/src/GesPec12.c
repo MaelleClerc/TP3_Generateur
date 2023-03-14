@@ -70,10 +70,6 @@ S_Pec12_Descriptor Pec12;
 
 void ScanPec12 (bool ValA, bool ValB, bool ValPB)
 {
-    // Variables locales
-    static uint8_t Compteur_Pression = 0;
-    static uint32_t Compteur_Inactivite = 0;
-    
     // Traitement antirebond sur A, B et PB
     DoDebounce (&DescrA, ValA);
     DoDebounce (&DescrB, ValB);
@@ -82,16 +78,20 @@ void ScanPec12 (bool ValA, bool ValB, bool ValPB)
 
     // Detection increment / decrement
     // Rotation a droite
-    if (((DescrB.bits.KeyPrevInputValue == 0) && (DescrB.bits.KeyValue == 1) && (DescrA.bits.KeyValue == 1)) || 
-        ((DescrB.bits.KeyPrevInputValue == 1) && (DescrB.bits.KeyValue == 0) && (DescrA.bits.KeyValue == 0)))
+    if ((DescrB.bits.KeyPrevInputValue == 0) && (DescrB.bits.KeyValue == 1))
     {
-        Pec12.Inc = 1;
-    }
-    // Rotation a gauche
-    else if (((DescrB.bits.KeyPrevInputValue == 0) && (DescrB.bits.KeyValue == 1) && (DescrA.bits.KeyValue == 0)) || 
-             ((DescrB.bits.KeyPrevInputValue == 1) && (DescrB.bits.KeyValue == 0) && (DescrA.bits.KeyValue == 1)))
-    {
-        Pec12.Dec = 1;
+        if(DescrA.bits.KeyValue == 1)
+        {
+            Pec12.Dec = 1;
+            Pec12.InactivityDuration = 0;
+            Pec12.NoActivity = 0;
+        }
+        else
+        {
+            Pec12.Inc = 1;
+            Pec12.InactivityDuration = 0;
+            Pec12.NoActivity = 0;
+        }
     }
     else
     {
@@ -104,37 +104,37 @@ void ScanPec12 (bool ValA, bool ValB, bool ValPB)
     if (DescrPB.bits.KeyValue == 1)
     {
         Pec12.OK = 0;
-        Pec12.ESC = 1;
-        Compteur_Pression = 0;
-    }
-    else if (DescrPB.bits.KeyValue == 0)
-    {
-        // On incremente un compteur tant que le bouton est presse
-        Compteur_Pression ++;
-    }
-    // Si le bouton est relache avant 500ms (cette fonction est appelee toutes les 10ms)
-    if ((Compteur_Pression < 50) && (DescrPB.bits.KeyValue == 0))
-    {
-        Pec12.OK = 1;
         Pec12.ESC = 0;
-        Compteur_Pression = 0;
+        Pec12.PressDuration ++;
     }
-    // Si le bouton est relache a partir de 500ms
-    else if ((Compteur_Pression >= 50) && (DescrPB.bits.KeyValue == 0))
+    
+    // Si le bouton est relache
+    if (DescrPB.bits.KeyValue == 0)
     {
-        Pec12.ESC = 1;
-        Pec12.OK = 0;
-        Compteur_Pression = 0;
+        // apres 500ms
+        if (Pec12.PressDuration >= 500)
+        {
+            Pec12.ESC = 1;
+            Pec12.OK = 0;
+            Pec12.PressDuration = 0;
+        }
+        else
+        {
+            // Si il est relache avant
+            Pec12.OK = 1;
+            Pec12.ESC = 0;
+            Pec12.PressDuration = 0;
+        }
     }
 
     // Gestion inactivite
     // Si rien n'a ete touche
-    if ((DescrA.bits.KeyValue == 0) && (DescrB.bits.KeyValue == 0) && (DescrPB.bits.KeyValue == 1))
+    if ((Pec12.Dec == 0) && (Pec12.Inc == 0) && (DescrPB.bits.KeyValue == 1))
     {
-        Compteur_Inactivite ++;
+        Pec12.InactivityDuration ++;
         
-        // Si cela fait 5s que rien ne s'est passe (5s, appel toutes les 10ms => 5*60*100 = 30000)
-        if(Compteur_Inactivite == 30000)
+        // Si cela fait 5s que rien ne s'est passe (5s, appel toutes les 1ms)
+        if(Pec12.InactivityDuration == 5000)
         {
             // On eteint le backlight du LCD
             lcd_bl_off();
@@ -144,7 +144,7 @@ void ScanPec12 (bool ValA, bool ValB, bool ValPB)
     {
         // On rallume le backlight du LCD
         lcd_bl_on();
-        Compteur_Inactivite = 0;
+        Pec12.InactivityDuration = 0;
     }
    
  } // ScanPec12

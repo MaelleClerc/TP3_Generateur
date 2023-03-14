@@ -11,6 +11,7 @@
 #include "MenuGen.h"
 #include "GesPec12.h"
 #include "Mc32DriverLcd.h"
+#include "Generateur.h"
 
 MENU_STATES MENU_DATA;
 
@@ -46,19 +47,19 @@ void MENU_Execute(S_ParamGen *pParam)
             printf_lcd("*Forme = %6d", pParam->Forme);
             
             // Gestion de la sortie de l'etat
-            if (Pec12.Inc == 1)
+            if (Pec12IsPlus() == 1)
             {
                 MENU_DATA = MENU_STATE_FREQUENCE;
                 lcd_gotoxy(1, 1);
                 printf_lcd(" Forme = %6d", pParam->Forme);
             }
-            else if (Pec12.Dec == 1)
+            else if (Pec12IsMinus() == 1)
             {
                 MENU_DATA = MENU_STATE_OFFSET;
                 lcd_gotoxy(1, 1);
                 printf_lcd(" Forme = %6d", pParam->Forme);
             }
-            else if (Pec12.OK == 1)
+            else if (Pec12IsOK() == 1)
             {
                 MENU_DATA = MENU_STATE_FORME_VALUE;
             }
@@ -68,13 +69,11 @@ void MENU_Execute(S_ParamGen *pParam)
 ////////////////////////////////////////////////////////////////////////////////
         case MENU_STATE_FORME_VALUE:
             
-            Pec12.OK = 0;
-            
             // Gestion de l'affichage
             lcd_gotoxy(1, 1);
-            printf_lcd("*Forme = %6c", MenuFormes[CompteurForme]);
+            printf_lcd("#Forme = %6c", MenuFormes[CompteurForme]);
             
-            if (Pec12.Inc == 1)
+            if (Pec12IsPlus() == 1)
             {
                 CompteurForme ++;
                 
@@ -83,7 +82,7 @@ void MENU_Execute(S_ParamGen *pParam)
                     CompteurForme = 0;
                 }
             }
-            else if (Pec12.Dec == 1)
+            else if (Pec12IsMinus() == 1)
             {
                 if (CompteurForme == 0)
                 {
@@ -95,7 +94,7 @@ void MENU_Execute(S_ParamGen *pParam)
             
             // Gestion de la sortie de l'etat
             // Si la selection est OK
-            if (Pec12.OK == 1)
+            if (Pec12IsOK() == 1)
             {
                 // On valide la valeur choisie
                 switch (CompteurForme)
@@ -126,13 +125,13 @@ void MENU_Execute(S_ParamGen *pParam)
                 }
                 
                 // On envoie les nouvelles valeurs au generateur
-                GENSIG_UpdateSignal(&pParam);
+                GENSIG_UpdateSignal(pParam);
                 
                 // On retourne au menu precedent
                 MENU_DATA = MENU_STATE_FORME;
             }
             // Si la selection n'est pas OK
-            else if (Pec12.ESC == 1)
+            else if (Pec12IsESC() == 1)
             {
                 // On reprend l'ancienne valeur
                 CompteurForme = pParam->Forme;
@@ -151,19 +150,19 @@ void MENU_Execute(S_ParamGen *pParam)
             printf_lcd("*Freq [Hz] = %4d", pParam->Frequence);
             
             // Gestion de la sortie de l'etat
-            if (Pec12.Inc == 1)
+            if (Pec12IsPlus() == 1)
             {
                 MENU_DATA = MENU_STATE_AMPLITUDE;
                 lcd_gotoxy(1, 2);
                 printf_lcd(" Freq [Hz] = %4d", pParam->Frequence);
             }
-            else if (Pec12.Dec == 1)
+            else if (Pec12IsMinus() == 1)
             {
                 MENU_DATA = MENU_STATE_FORME;
                 lcd_gotoxy(1, 2);
                 printf_lcd(" Freq [Hz] = %4d", pParam->Frequence);
             }
-            else if (Pec12.OK == 1)
+            else if (Pec12IsOK() == 1)
             {
                 MENU_DATA = MENU_STATE_FREQUENCE_VALUE;
             }
@@ -173,13 +172,11 @@ void MENU_Execute(S_ParamGen *pParam)
 ////////////////////////////////////////////////////////////////////////////////
         case MENU_STATE_FREQUENCE_VALUE:
             
-            Pec12.OK = 0;
-            
             // Gestion de l'affichage
             lcd_gotoxy(1, 2);
-            printf_lcd("*Freq [Hz] = %4d", Frequence_Selection);
+            printf_lcd("#Freq [Hz] = %4d", Frequence_Selection);
             
-            if (Pec12.Inc == 1)
+            if (Pec12IsPlus() == 1)
             {
                 Frequence_Selection += 20;
                 
@@ -188,7 +185,7 @@ void MENU_Execute(S_ParamGen *pParam)
                     Frequence_Selection = 20;
                 }
             }
-            else if (Pec12.Dec == 1)
+            else if (Pec12IsMinus() == 1)
             {
                 if (Frequence_Selection == 20)
                 {
@@ -200,19 +197,19 @@ void MENU_Execute(S_ParamGen *pParam)
             
             // Gestion de la sortie de l'etat
             // Si la selection est OK
-            if (Pec12.OK == 1)
+            if (Pec12IsOK() == 1)
             {
                 // On valide la valeur choisie
                 pParam->Frequence = Frequence_Selection;
                 
                 // On envoie les nouvelles valeurs au generateur
-                GENSIG_UpdateSignal(&pParam);
+                GENSIG_UpdateSignal(pParam);
                 
                 // On retourne au menu precedent
                 MENU_DATA = MENU_STATE_FREQUENCE;
             }
             // Si la selection n'est pas OK
-            else if (Pec12.ESC == 1)
+            else if (Pec12IsESC() == 1)
             {
                 // On reprend l'ancienne valeur
                 Frequence_Selection = pParam->Frequence;
@@ -231,19 +228,19 @@ void MENU_Execute(S_ParamGen *pParam)
             printf_lcd("*Ampl [mV] = %5d", pParam->Amplitude);
             
             // Gestion de la sortie de l'etat
-            if (Pec12.Inc == 1)
+            if (Pec12IsPlus() == 1)
             {
                 MENU_DATA = MENU_STATE_OFFSET;
                 lcd_gotoxy(1, 3);
                 printf_lcd(" Ampl [mV] = %5d", pParam->Amplitude);
             }
-            else if (Pec12.Dec == 1)
+            else if (Pec12IsMinus() == 1)
             {
                 MENU_DATA = MENU_STATE_FREQUENCE;
                 lcd_gotoxy(1, 3);
                 printf_lcd(" Ampl [mV] = %5d", pParam->Amplitude);
             }
-            else if (Pec12.OK == 1)
+            else if (Pec12IsOK() == 1)
             {
                 MENU_DATA = MENU_STATE_AMPLITUDE_VALUE;
             }
@@ -253,13 +250,11 @@ void MENU_Execute(S_ParamGen *pParam)
 ////////////////////////////////////////////////////////////////////////////////
         case MENU_STATE_AMPLITUDE_VALUE:
             
-            Pec12.OK = 0;
-            
             // Gestion de l'affichage
             lcd_gotoxy(1, 3);
-            printf_lcd("*Ampl [mV] = %5d", Amplitude_Selection);
+            printf_lcd("#Ampl [mV] = %5d", Amplitude_Selection);
             
-            if (Pec12.Inc == 1)
+            if (Pec12IsPlus() == 1)
             {
                 Amplitude_Selection += 100;
                 
@@ -268,7 +263,7 @@ void MENU_Execute(S_ParamGen *pParam)
                     Amplitude_Selection = 100;
                 }
             }
-            else if (Pec12.Dec == 1)
+            else if (Pec12IsMinus() == 1)
             {
                 if (Amplitude_Selection == 100)
                 {
@@ -280,19 +275,19 @@ void MENU_Execute(S_ParamGen *pParam)
             
             // Gestion de la sortie de l'etat
             // Si la selection est OK
-            if (Pec12.OK == 1)
+            if (Pec12IsOK() == 1)
             {
                 // On valide la valeur choisie
                 pParam->Amplitude = Amplitude_Selection;
                 
                 // On envoie les nouvelles valeurs au generateur
-                GENSIG_UpdateSignal(&pParam);
+                GENSIG_UpdateSignal(pParam);
                 
                 // On retourne au menu precedent
                 MENU_DATA = MENU_STATE_AMPLITUDE;
             }
             // Si la selection n'est pas OK
-            else if (Pec12.ESC == 1)
+            else if (Pec12IsESC() == 1)
             {
                 // On reprend l'ancienne valeur
                 Amplitude_Selection = pParam->Amplitude;
@@ -311,19 +306,19 @@ void MENU_Execute(S_ParamGen *pParam)
             printf_lcd("*Offset [mV] = %5d", pParam->Offset);
             
             // Gestion de la sortie de l'etat
-            if (Pec12.Inc == 1)
+            if (Pec12IsPlus() == 1)
             {
                 MENU_DATA = MENU_STATE_FORME;
                 lcd_gotoxy(1, 4);
                 printf_lcd(" Offset [mV] = %5d", pParam->Offset);
             }
-            else if (Pec12.Dec == 1)
+            else if (Pec12IsMinus() == 1)
             {
                 MENU_DATA = MENU_STATE_AMPLITUDE;
                 lcd_gotoxy(1, 4);
                 printf_lcd(" Offset [mV] = %5d", pParam->Offset);
             }
-            else if (Pec12.OK == 1)
+            else if (Pec12IsOK() == 1)
             {
                 MENU_DATA = MENU_STATE_OFFSET_VALUE;
             }
@@ -333,20 +328,18 @@ void MENU_Execute(S_ParamGen *pParam)
 ////////////////////////////////////////////////////////////////////////////////
         case MENU_STATE_OFFSET_VALUE:
             
-            Pec12.OK = 0;
-            
             // Gestion de l'affichage
             lcd_gotoxy(1, 4);
-            printf_lcd("*Offset [mV] = %5d", Offset_Selection);
+            printf_lcd("#Offset [mV] = %5d", Offset_Selection);
             
-            if (Pec12.Inc == 1)
+            if (Pec12IsPlus() == 1)
             {
                 if (Offset_Selection < 5000)
                 {
                     Offset_Selection += 100;
                 }
             }
-            else if (Pec12.Dec == 1)
+            else if (Pec12IsMinus() == 1)
             {
                 if (Offset_Selection > -5000)
                 {
@@ -356,19 +349,19 @@ void MENU_Execute(S_ParamGen *pParam)
             
             // Gestion de la sortie de l'etat
             // Si la selection est OK
-            if (Pec12.OK == 1)
+            if (Pec12IsOK() == 1)
             {
                 // On valide la valeur choisie
                 pParam->Offset = Offset_Selection;
                 
                 // On envoie les nouvelles valeurs au generateur
-                GENSIG_UpdateSignal(&pParam);
+                GENSIG_UpdateSignal(pParam);
                 
                 // On retourne au menu precedent
                 MENU_DATA = MENU_STATE_OFFSET;
             }
             // Si la selection n'est pas OK
-            else if (Pec12.ESC == 1)
+            else if (Pec12IsESC() == 1)
             {
                 // On reprend l'ancienne valeur
                 Offset_Selection = pParam->Offset;
@@ -379,6 +372,12 @@ void MENU_Execute(S_ParamGen *pParam)
             
             break;
     }
+    
+    // On nettoie les flags du Pec12
+    Pec12ClearESC();
+    Pec12ClearMinus();
+    Pec12ClearOK();
+    Pec12ClearPlus();
 }
 
 
