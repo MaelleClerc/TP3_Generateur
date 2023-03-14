@@ -25,6 +25,8 @@ void  GENSIG_UpdateSignal(S_ParamGen *pParam);
 
 // A appeler dans int Timer3
 void  GENSIG_Execute(void);
-
+void  GENSIG_Execute_DENTSCIE(void);
+void  GENSIG_Execute_TRIANGLE(void);
+void  GENSIG_Execute_CARRE(void);
 
 #endif

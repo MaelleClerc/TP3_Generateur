@@ -160,6 +160,9 @@ void APP_Tasks ( void )
 
             // Initialisation du generateur
             GENSIG_Initialize(&LocalParamGen);
+            GENSIG_UpdatePeriode(&LocalParamGen);
+            GENSIG_UpdateSignal(&LocalParamGen);
+            
             
             printf_lcd("Canevas Tp3       ");
             // A adapter pour les 2 noms sur 2 lignes
@@ -169,11 +172,17 @@ void APP_Tasks ( void )
             // Active les timers 
             DRV_TMR0_Start();
             DRV_TMR1_Start();
+            
+            
+            
+            
+            
             appData.state = APP_STATE_WAIT;
             break;
         }
         case APP_STATE_WAIT :
           // nothing to do
+            
         break;
 
        case APP_STATE_SERVICE_TASKS:
