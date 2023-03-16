@@ -43,7 +43,7 @@ void MENU_Execute(S_ParamGen *pParam)
     if (Init_Affichage == 0)
     {
             lcd_gotoxy(1, 1);
-            printf_lcd(" Forme = %6d", pParam->Forme);
+            printf_lcd(" Forme = Sinus");
             lcd_gotoxy(1, 2);
             printf_lcd(" Freq [Hz] = %4d", pParam->Frequence);
             lcd_gotoxy(1, 3);
@@ -60,24 +60,50 @@ void MENU_Execute(S_ParamGen *pParam)
             
             // Gestion de l'affichage
             lcd_gotoxy(1, 1);
-            printf_lcd("*Forme = %6d", pParam->Forme);
+            switch (pParam->Forme)
+            {
+                case 0:
+                    
+                    printf_lcd("*Forme = Sinus");
+                    
+                    break;
+                    
+                case 1:
+                    
+                    printf_lcd("*Forme = Triangle");
+                    
+                    break;
+                    
+                case 2:
+                    
+                    printf_lcd("*Forme = DentDeScie");
+                    
+                    break;
+                    
+                case 3:
+                    
+                    printf_lcd("*Forme = Carre");
+                    
+                    break;
+            }
             
             // Gestion de la sortie de l'etat
             if (Pec12IsPlus() == 1)
             {
                 MENU_DATA = MENU_STATE_FREQUENCE;
                 lcd_gotoxy(1, 1);
-                printf_lcd(" Forme = %6d", pParam->Forme);
+                printf_lcd(" ");
             }
             else if (Pec12IsMinus() == 1)
             {
                 MENU_DATA = MENU_STATE_OFFSET;
                 lcd_gotoxy(1, 1);
-                printf_lcd(" Forme = %6d", pParam->Forme);
+                printf_lcd(" ");
             }
             else if (Pec12IsOK() == 1)
             {
                 MENU_DATA = MENU_STATE_FORME_VALUE;
+                lcd_ClearLine(1);
             }
             else if (PLIB_PORTS_PinGet(S_OK, PORT_CHANNEL_G, PORTS_BIT_POS_12) == 0)
             {
@@ -95,7 +121,32 @@ void MENU_Execute(S_ParamGen *pParam)
             
             // Gestion de l'affichage
             lcd_gotoxy(1, 1);
-            printf_lcd("#Forme = %6c", MenuFormes[CompteurForme]);
+            switch (CompteurForme)
+            {
+                case 0:
+                    
+                    printf_lcd("#Forme = Sinus");
+                    
+                    break;
+                    
+                case 1:
+                    
+                    printf_lcd("#Forme = Triangle");
+                    
+                    break;
+                    
+                case 2:
+                    
+                    printf_lcd("#Forme = DentDeScie");
+                    
+                    break;
+                    
+                case 3:
+                    
+                    printf_lcd("#Forme = Carre");
+                    
+                    break;
+            }
             
             if (Pec12IsPlus() == 1)
             {
@@ -153,6 +204,7 @@ void MENU_Execute(S_ParamGen *pParam)
                 
                 // On retourne au menu precedent
                 MENU_DATA = MENU_STATE_FORME;
+                lcd_ClearLine(1);
             }
             // Si la selection n'est pas OK
             else if (Pec12IsESC() == 1)
@@ -162,6 +214,7 @@ void MENU_Execute(S_ParamGen *pParam)
                 
                 // On retourne au menu precedent
                 MENU_DATA = MENU_STATE_FORME; 
+                lcd_ClearLine(1);
             }
             else if (PLIB_PORTS_PinGet(S_OK, PORT_CHANNEL_G, PORTS_BIT_POS_12) == 0)
             {
@@ -191,6 +244,7 @@ void MENU_Execute(S_ParamGen *pParam)
             else if (Pec12IsMinus() == 1)
             {
                 MENU_DATA = MENU_STATE_FORME;
+                lcd_ClearLine(1);
                 lcd_gotoxy(1, 2);
                 printf_lcd(" Freq [Hz] = %4d", pParam->Frequence);
             }
@@ -373,6 +427,7 @@ void MENU_Execute(S_ParamGen *pParam)
             if (Pec12IsPlus() == 1)
             {
                 MENU_DATA = MENU_STATE_FORME;
+                lcd_ClearLine(1);
                 lcd_gotoxy(1, 4);
                 printf_lcd(" Offset [mV] = %5d", pParam->Offset);
             }
