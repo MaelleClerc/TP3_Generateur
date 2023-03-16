@@ -14,6 +14,12 @@
 
 #define MAGIC 0x123455AA
 
+#define CARRE       0
+#define TRIANGLE    1
+#define DENTSCIE    2
+#define SINUS       3
+
+
 typedef enum  { SignalSinus, SignalTriangle, SignalDentDeScie, SignalCarre } E_FormesSignal;
 
 // Structure des paramètres du générateur
