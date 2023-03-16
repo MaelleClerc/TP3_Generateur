@@ -125,13 +125,13 @@ void MENU_Execute(S_ParamGen *pParam)
             {
                 case 0:
                     
-                    printf_lcd("#Forme = Sinus");
+                    printf_lcd("#Forme = Sinus     ");
                     
                     break;
                     
                 case 1:
                     
-                    printf_lcd("#Forme = Triangle");
+                    printf_lcd("#Forme = Triangle   ");
                     
                     break;
                     
@@ -143,7 +143,7 @@ void MENU_Execute(S_ParamGen *pParam)
                     
                 case 3:
                     
-                    printf_lcd("#Forme = Carre");
+                    printf_lcd("#Forme = Carre     ");
                     
                     break;
             }
