@@ -37,6 +37,21 @@ void MENU_Execute(S_ParamGen *pParam)
     static int16_t Amplitude_Selection = 100;
     static int16_t Offset_Selection = 0;
     static uint8_t CompteurForme = 0;
+    static bool Init_Affichage = 0;
+    
+    // Initialisation de l'affichage
+    if (Init_Affichage == 0)
+    {
+            lcd_gotoxy(1, 1);
+            printf_lcd(" Forme = %6d", pParam->Forme);
+            lcd_gotoxy(1, 2);
+            printf_lcd(" Freq [Hz] = %4d", pParam->Frequence);
+            lcd_gotoxy(1, 3);
+            printf_lcd(" Ampl [mV] = %5d", pParam->Amplitude);
+            lcd_gotoxy(1, 4);
+            printf_lcd(" Offset [mV] = %5d", pParam->Offset);
+            Init_Affichage = 1;
+    }
     
     switch (MENU_DATA)
     {
@@ -63,6 +78,14 @@ void MENU_Execute(S_ParamGen *pParam)
             else if (Pec12IsOK() == 1)
             {
                 MENU_DATA = MENU_STATE_FORME_VALUE;
+            }
+            else if (PLIB_PORTS_PinGet(S_OK, PORT_CHANNEL_G, PORTS_BIT_POS_12) == 0)
+            {
+                MENU_DATA = MENU_STATE_SAVE;
+                lcd_ClearLine(1);
+                lcd_ClearLine(2);
+                lcd_ClearLine(3);
+                lcd_ClearLine(4);
             }
             
             break;
@@ -140,6 +163,14 @@ void MENU_Execute(S_ParamGen *pParam)
                 // On retourne au menu precedent
                 MENU_DATA = MENU_STATE_FORME; 
             }
+            else if (PLIB_PORTS_PinGet(S_OK, PORT_CHANNEL_G, PORTS_BIT_POS_12) == 0)
+            {
+                MENU_DATA = MENU_STATE_SAVE;
+                lcd_ClearLine(1);
+                lcd_ClearLine(2);
+                lcd_ClearLine(3);
+                lcd_ClearLine(4);
+            }
             
             break;
             
@@ -166,6 +197,14 @@ void MENU_Execute(S_ParamGen *pParam)
             else if (Pec12IsOK() == 1)
             {
                 MENU_DATA = MENU_STATE_FREQUENCE_VALUE;
+            }
+            else if (PLIB_PORTS_PinGet(S_OK, PORT_CHANNEL_G, PORTS_BIT_POS_12) == 0)
+            {
+                MENU_DATA = MENU_STATE_SAVE;
+                lcd_ClearLine(1);
+                lcd_ClearLine(2);
+                lcd_ClearLine(3);
+                lcd_ClearLine(4);
             }
             
             break;
@@ -218,6 +257,14 @@ void MENU_Execute(S_ParamGen *pParam)
                 // On retourne au menu precedent
                 MENU_DATA = MENU_STATE_FREQUENCE; 
             }
+            else if (PLIB_PORTS_PinGet(S_OK, PORT_CHANNEL_G, PORTS_BIT_POS_12) == 0)
+            {
+                MENU_DATA = MENU_STATE_SAVE;
+                lcd_ClearLine(1);
+                lcd_ClearLine(2);
+                lcd_ClearLine(3);
+                lcd_ClearLine(4);
+            }
             
             break;
             
@@ -244,6 +291,14 @@ void MENU_Execute(S_ParamGen *pParam)
             else if (Pec12IsOK() == 1)
             {
                 MENU_DATA = MENU_STATE_AMPLITUDE_VALUE;
+            }
+            else if (PLIB_PORTS_PinGet(S_OK, PORT_CHANNEL_G, PORTS_BIT_POS_12) == 0)
+            {
+                MENU_DATA = MENU_STATE_SAVE;
+                lcd_ClearLine(1);
+                lcd_ClearLine(2);
+                lcd_ClearLine(3);
+                lcd_ClearLine(4);
             }
             
             break;
@@ -296,6 +351,14 @@ void MENU_Execute(S_ParamGen *pParam)
                 // On retourne au menu precedent
                 MENU_DATA = MENU_STATE_AMPLITUDE; 
             }
+            else if (PLIB_PORTS_PinGet(S_OK, PORT_CHANNEL_G, PORTS_BIT_POS_12) == 0)
+            {
+                MENU_DATA = MENU_STATE_SAVE;
+                lcd_ClearLine(1);
+                lcd_ClearLine(2);
+                lcd_ClearLine(3);
+                lcd_ClearLine(4);
+            }
             
             break;
 
@@ -322,6 +385,14 @@ void MENU_Execute(S_ParamGen *pParam)
             else if (Pec12IsOK() == 1)
             {
                 MENU_DATA = MENU_STATE_OFFSET_VALUE;
+            }
+            else if (PLIB_PORTS_PinGet(S_OK, PORT_CHANNEL_G, PORTS_BIT_POS_12) == 0)
+            {
+                MENU_DATA = MENU_STATE_SAVE;
+                lcd_ClearLine(1);
+                lcd_ClearLine(2);
+                lcd_ClearLine(3);
+                lcd_ClearLine(4);
             }
             
             break;
@@ -370,7 +441,34 @@ void MENU_Execute(S_ParamGen *pParam)
                 // On retourne au menu precedent
                 MENU_DATA = MENU_STATE_OFFSET; 
             }
+            else if (PLIB_PORTS_PinGet(S_OK, PORT_CHANNEL_G, PORTS_BIT_POS_12) == 0)
+            {
+                MENU_DATA = MENU_STATE_SAVE;
+                lcd_ClearLine(1);
+                lcd_ClearLine(2);
+                lcd_ClearLine(3);
+                lcd_ClearLine(4);
+            }
             
+            break;
+            
+////////////////////////////////////////////////////////////////////////////////
+        case MENU_STATE_SAVE:
+            
+            // Affichage specifique
+            lcd_gotoxy(1, 2);
+            printf_lcd("   Sauvegarde  ?");
+            lcd_gotoxy(1, 3);
+            printf_lcd("   (appuis long)");
+            
+            // Gestion de la sortie de l'etat
+            /* if ()
+             * {
+             *     MENU_DATA = MENU_STATE_FORME;
+             *     Init_Affichage = 1; 
+             * }
+            */
+             
             break;
     }
     

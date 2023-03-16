@@ -110,9 +110,7 @@ void ScanPec12 (bool ValA, bool ValB, bool ValPB)
         Pec12.ESC = 0;
         Compteur_Pression ++;
     }
-    
-    // Si le bouton est relache
-    if (DescrPB.bits.KeyValue == 0)
+    else
     {
         // apres 500ms
         if (Compteur_Pression >= 500)
