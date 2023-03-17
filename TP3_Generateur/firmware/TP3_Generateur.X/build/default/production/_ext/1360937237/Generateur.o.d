@@ -137,7 +137,8 @@ build/default/production/_ext/1360937237/Generateur.o: \
  ../../../../../../../framework/peripheral/osc/processor/../templates/osc_PLLBypass_Unsupported.h \
  ../../../../../../../framework/peripheral/osc/processor/../templates/osc_BTPLLClockOut_Unsupported.h \
  ../../../../../../../framework/system/clk/sys_clk_compatibility.h \
- ../../../../../../../framework/driver/tmr/drv_tmr_compatibility.h
+ ../../../../../../../framework/driver/tmr/drv_tmr_compatibility.h \
+ ../src/Mc32NVMUtil.h
 
 ../src/Generateur.h:
 
@@ -418,3 +419,5 @@ build/default/production/_ext/1360937237/Generateur.o: \
 ../../../../../../../framework/system/clk/sys_clk_compatibility.h:
 
 ../../../../../../../framework/driver/tmr/drv_tmr_compatibility.h:
+
+../src/Mc32NVMUtil.h:

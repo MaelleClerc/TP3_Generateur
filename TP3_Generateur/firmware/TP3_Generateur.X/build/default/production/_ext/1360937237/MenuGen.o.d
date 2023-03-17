@@ -52,7 +52,8 @@ build/default/production/_ext/1360937237/MenuGen.o: ../src/MenuGen.c \
  ../../../../../../../framework/peripheral/tmr/processor/../templates/tmr_Period32Bit_In16BitRegister_pic32.h \
  ../../../../../../../framework/peripheral/tmr/processor/../templates/tmr_CounterAsyncWriteControl_Default.h \
  ../../../../../../../framework/peripheral/tmr/processor/../templates/tmr_CounterAsyncWriteInProgress_Default.h \
- ../../../../../../../framework/peripheral/tmr/processor/../templates/tmr_TimerOperationMode_Default.h
+ ../../../../../../../framework/peripheral/tmr/processor/../templates/tmr_TimerOperationMode_Default.h \
+ ../src/Mc32NVMUtil.h
 
 ../src/MenuGen.h:
 
@@ -167,3 +168,5 @@ build/default/production/_ext/1360937237/MenuGen.o: ../src/MenuGen.c \
 ../../../../../../../framework/peripheral/tmr/processor/../templates/tmr_CounterAsyncWriteInProgress_Default.h:
 
 ../../../../../../../framework/peripheral/tmr/processor/../templates/tmr_TimerOperationMode_Default.h:
+
+../src/Mc32NVMUtil.h:

@@ -161,6 +161,8 @@ void APP_Tasks ( void )
             // Initialisation du generateur
             GENSIG_Initialize(&LocalParamGen);
             
+            GENSIG_UpdateSignal(&LocalParamGen);
+            
             // Affichage a l'initialisation
             printf_lcd("TP3 Generateur");
             lcd_gotoxy(1,2);

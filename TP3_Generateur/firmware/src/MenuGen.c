@@ -13,6 +13,7 @@
 #include "Mc32DriverLcd.h"
 #include "Generateur.h"
 #include "bsp.h"
+#include "Mc32NVMUtil.h"
 
 MENU_STATES MENU_DATA;
 
@@ -33,6 +34,7 @@ void MENU_Execute(S_ParamGen *pParam)
     static int16_t Amplitude_Selection = 100;
     static int16_t Offset_Selection = 0;
     static uint8_t CompteurForme = 0;
+    static uint16_t CompteurAppuis = 0;
     static bool Init_Affichage = 0;
     
     // Initialisation de l'affichage
@@ -293,7 +295,7 @@ void MENU_Execute(S_ParamGen *pParam)
                 pParam->Frequence = Frequence_Selection;
                 
                 // On envoie les nouvelles valeurs au generateur
-                GENSIG_UpdateSignal(pParam);
+                GENSIG_UpdatePeriode(pParam);
                 
                 // On retourne au menu precedent
                 MENU_DATA = MENU_STATE_FREQUENCE;
@@ -475,7 +477,7 @@ void MENU_Execute(S_ParamGen *pParam)
             if (Pec12IsOK() == 1)
             {
                 // On valide la valeur choisie
-                pParam->Offset = Offset_Selection;
+                pParam->Offset = 0 - Offset_Selection;
                 
                 // On envoie les nouvelles valeurs au generateur
                 GENSIG_UpdateSignal(pParam);
@@ -512,14 +514,32 @@ void MENU_Execute(S_ParamGen *pParam)
             lcd_gotoxy(1, 3);
             printf_lcd("   (appuis long)");
             
-            // Gestion de la sortie de l'etat
-            /* if ()
-             * {
-             *     MENU_DATA = MENU_STATE_FORME;
-             *     Init_Affichage = 1; 
-             * }
-            */
-             
+            if (PLIB_PORTS_PinGet(S_OK, PORT_CHANNEL_G, PORTS_BIT_POS_12) == 0)
+            {
+                CompteurAppuis ++;  
+            }
+            else
+            {
+                if (CompteurAppuis > 0)
+                {
+                    if (CompteurAppuis >= 200)
+                    {
+                        // Sauvegarde dans la flash (14 = sizeof de la stucture pParam)
+                        NVM_WriteBlock((uint32_t*) &pParam, 14);
+                        CompteurAppuis = 0;
+                        lcd_gotoxy(1, 4);
+                        printf_lcd("Datas sauvegardes");
+                    }
+                    else
+                    {
+                        // Retour au menu forme
+                        MENU_DATA = MENU_STATE_FORME;
+                        Init_Affichage = 0;
+                        CompteurAppuis = 0;
+                    }
+                }
+            }
+            
             break;
     }
     

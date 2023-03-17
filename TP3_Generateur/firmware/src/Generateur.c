@@ -12,6 +12,7 @@
 #include "DefMenuGen.h"
 #include "Mc32gestSpiDac.h"
 #include "driver/tmr/drv_tmr.h"
+#include "Mc32NVMUtil.h"
 #include <math.h>
 
 // T.P. 2016 100 echantillons
@@ -35,10 +36,29 @@ uint32_t tabSignalValues[MAX_ECH] = {0};
 // Initialisation du  générateur
 void  GENSIG_Initialize(S_ParamGen *pParam)
 {
-    pParam->Amplitude = AMPLITUDE_INIT;
-    pParam->Forme = DENTSCIE;
-    pParam->Frequence = FREQ_INIT;
-    pParam->Offset = OFFSET_INIT;  
+    S_ParamGen ReadParam;
+    
+    //Lecture du bloc sauvegradé et met à jour la structure
+    NVM_ReadBlock((uint32_t*) &ReadParam, 14);
+    
+    //test de la sauvegarde
+    if (ReadParam.Magic != 0x12345678)
+    {
+        //Mettre le parametre par defaut
+        pParam->Amplitude = AMPLITUDE_INIT;
+        pParam->Forme = DENTSCIE;
+        pParam->Frequence = FREQ_INIT;
+        pParam->Offset = OFFSET_INIT;  
+        pParam->Magic = 0x12345678;
+    }
+    else
+    {
+        // Sinon on prend les parametres 
+        pParam->Amplitude = ReadParam.Amplitude;
+        pParam->Forme = ReadParam.Forme;
+        pParam->Frequence = ReadParam.Frequence;
+        pParam->Offset = ReadParam.Offset;
+    }
 }
   
 
