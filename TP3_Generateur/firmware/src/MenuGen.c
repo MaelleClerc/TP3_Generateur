@@ -1,8 +1,8 @@
 // Tp3  manipulation MenuGen avec PEC12
 // C. HUBER  10/02/2015 pour SLO2 2014-2015
 // Fichier MenuGen.c
-// Gestion du menu  du générateur
-// Traitement cyclique à 10 ms
+// Gestion du menu  du gÃ©nÃ©rateur
+// Traitement cyclique Ã  10 ms
 
 
 
@@ -23,7 +23,7 @@ S_Pec12_Descriptor Pec12;
 const char MenuFormes[4][21] = 
     {" Sinus", " Triangle", " DentDeScie", " Carre"};
 
-// Initialisation du menu et des paramètres
+// Initialisation du menu et des paramÃ¨tres
 void MENU_Initialize(S_ParamGen *pParam)
 {
 }
@@ -43,7 +43,7 @@ void MENU_Execute(S_ParamGen *pParam)
     if (Init_Affichage == 0)
     {
             lcd_gotoxy(1, 1);
-            printf_lcd(" Forme = Sinus");
+            printf_lcd(" Forme = Carre");
             lcd_gotoxy(1, 2);
             printf_lcd(" Freq [Hz] = %4d", pParam->Frequence);
             lcd_gotoxy(1, 3);
@@ -64,7 +64,7 @@ void MENU_Execute(S_ParamGen *pParam)
             {
                 case 0:
                     
-                    printf_lcd("*Forme = Sinus");
+                    printf_lcd("*Forme = Carre");
                     
                     break;
                     
@@ -82,7 +82,7 @@ void MENU_Execute(S_ParamGen *pParam)
                     
                 case 3:
                     
-                    printf_lcd("*Forme = Carre");
+                    printf_lcd("*Forme = Sinus");
                     
                     break;
             }
@@ -125,7 +125,7 @@ void MENU_Execute(S_ParamGen *pParam)
             {
                 case 0:
                     
-                    printf_lcd("#Forme = Sinus     ");
+                    printf_lcd("#Forme = Carre      ");
                     
                     break;
                     
@@ -143,7 +143,7 @@ void MENU_Execute(S_ParamGen *pParam)
                     
                 case 3:
                     
-                    printf_lcd("#Forme = Carre     ");
+                    printf_lcd("#Forme = Sinus    ");
                     
                     break;
             }
@@ -176,7 +176,7 @@ void MENU_Execute(S_ParamGen *pParam)
                 {
                     case 0:
                         
-                        pParam->Forme = SignalSinus;
+                        pParam->Forme = SignalCarre;
                         
                         break;
                         
@@ -194,7 +194,7 @@ void MENU_Execute(S_ParamGen *pParam)
                         
                     case 3:
                         
-                        pParam->Forme = SignalCarre;
+                        pParam->Forme = SignalSinus;
                         
                         break;
                 }
