@@ -525,10 +525,12 @@ void MENU_Execute(S_ParamGen *pParam)
                     if (CompteurAppuis >= 200)
                     {
                         // Sauvegarde dans la flash (14 = sizeof de la stucture pParam)
-                        NVM_WriteBlock((uint32_t*) &pParam, 14);
+                        NVM_WriteBlock((uint32_t*) pParam, sizeof(S_ParamGen));
                         CompteurAppuis = 0;
                         lcd_gotoxy(1, 4);
+                        NVM_ReadBlock((uint32_t*)pParam, sizeof(S_ParamGen));
                         printf_lcd("Datas sauvegardes");
+                         
                     }
                     else
                     {
