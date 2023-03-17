@@ -19,10 +19,6 @@ MENU_STATES MENU_DATA;
 // Structure pour les traitement du Pec12
 S_Pec12_Descriptor Pec12;
 
-// Tableau constant pour l'affichage de la forme du signal
-const char MenuFormes[4][21] = 
-    {" Sinus", " Triangle", " DentDeScie", " Carre"};
-
 // Initialisation du menu et des paramètres
 void MENU_Initialize(S_ParamGen *pParam)
 {
