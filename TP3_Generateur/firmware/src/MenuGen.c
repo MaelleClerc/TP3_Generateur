@@ -528,7 +528,6 @@ void MENU_Execute(S_ParamGen *pParam)
                         NVM_WriteBlock((uint32_t*) pParam, sizeof(S_ParamGen));
                         CompteurAppuis = 0;
                         lcd_gotoxy(1, 4);
-                        NVM_ReadBlock((uint32_t*)pParam, sizeof(S_ParamGen));
                         printf_lcd("Datas sauvegardes");
                          
                     }
