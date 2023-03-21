@@ -28,6 +28,7 @@
 #include "GesPec12.h"
 #include "Mc32Debounce.h"
 #include "Mc32DriverLcd.h"
+#include "bsp.h"
 
 // Descripteur des sinaux
 S_SwitchDescriptor DescrA;
@@ -128,7 +129,7 @@ void ScanPec12 (bool ValA, bool ValB, bool ValPB)
 
     // Gestion inactivite
     // Si rien n'a ete touche
-    if ((Pec12.Dec == 0) && (Pec12.Inc == 0) && (DescrPB.bits.KeyValue == 1))
+    if ((Pec12.Dec == 0) && (Pec12.Inc == 0) && (DescrPB.bits.KeyValue == 1) && (PLIB_PORTS_PinGet(S_OK, PORT_CHANNEL_G, PORTS_BIT_POS_12) == 1))
     {
         Pec12.InactivityDuration ++;
         
