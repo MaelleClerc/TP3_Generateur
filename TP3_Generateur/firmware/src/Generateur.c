@@ -18,7 +18,7 @@
 // T.P. 2016 100 echantillons
 #define MAX_ECH     100
 #define MAX_AMP     65535
-#define FREQ_INIT   20
+#define FREQ_INIT   100
 #define OFFSET_INIT 0
 #define CONVERSION  10000
 #define FACTEUR_CONVERSION 3.2767
@@ -37,7 +37,6 @@ uint32_t tabSignalValues[MAX_ECH] = {0};
 void  GENSIG_Initialize(S_ParamGen *pParam)
 {
     //Lecture du bloc sauvegradé et met à jour la structure
-    uint32_t test = sizeof(S_ParamGen); 
     NVM_ReadBlock((uint32_t*)pParam, sizeof(S_ParamGen));
     
     //test de la sauvegarde
@@ -57,9 +56,9 @@ void  GENSIG_Initialize(S_ParamGen *pParam)
 void  GENSIG_UpdatePeriode(S_ParamGen *pParam)
 {
     // Variable locale
-    float Val_Periode = 0;
+    uint16_t Val_Periode = 0;
     
-    Val_Periode = (float)F_SYS/(float)(pParam -> Frequence * MAX_ECH * PRESCALER) - 1;
+    Val_Periode = F_SYS/(pParam -> Frequence * MAX_ECH * PRESCALER) - 1;
     PLIB_TMR_Period16BitSet(TMR_ID_3, Val_Periode); 
 }
 
@@ -68,8 +67,9 @@ void  GENSIG_UpdateSignal(S_ParamGen *pParam)
 {   
     int32_t TestAmplitudeMaxMin = 0;
     int i;
-    float OldValue = 0;
     float signal;
+    float step = 0;
+    uint16_t Offset_TD = (pParam->Amplitude * FACTEUR_CONVERSION) + 32767; //pour tirangle et dents de scie
     
     for (i = 0; i < MAX_ECH; i++)
     {
@@ -78,42 +78,38 @@ void  GENSIG_UpdateSignal(S_ParamGen *pParam)
             case CARRE:
                 if(i < (MAX_ECH / 2))
                 {
-                    signal = pParam->Offset + pParam->Amplitude;                  
+                    signal = -(pParam->Offset) + pParam->Amplitude;                  
                     tabSignalValues[i] = SIGNAL_MIDDLE + signal * FACTEUR_CONVERSION + 0.5;                   
-                    //tabSignalValues[i] = (float)(SIGNAL_MIDDLE + (pParam->Amplitude *((float)SIGNAL_MIDDLE/(float)CONVERSION)) + 1) + (float)(pParam->Offset *((float)SIGNAL_MIDDLE/(float)CONVERSION));
-                }
+                }                   
                 else
                 {
-                    //tabSignalValues[i] = (float)(SIGNAL_MIDDLE - (pParam->Amplitude *((float)SIGNAL_MIDDLE/(float)CONVERSION)))+ (float)(pParam->Offset *((float)SIGNAL_MIDDLE/(float)CONVERSION)));
-                    signal = pParam->Offset - pParam->Amplitude;
+                    
+                    signal = -(pParam->Offset) - pParam->Amplitude;
 
                     tabSignalValues[i] = SIGNAL_MIDDLE + signal * FACTEUR_CONVERSION + 0.5;
                 }              
                 break;
                 
             case TRIANGLE: 
-                tabSignalValues[i] = OldValue + (pParam->Offset *(FACTEUR_CONVERSION));
-                //tabSignalValues[i] = SIGNAL_MIDDLE + signal * FACTEUR_CONVERSION + 0.5;
+                step = ((pParam->Amplitude * FACTEUR_CONVERSION) * 2 + 1)/ (MAX_ECH/2);
                 if(i < (MAX_ECH / 2))
                 {
-                    //signal = signal + pParam->Offset + (pParam->Amplitude * 2 + 0.5)/(MAX_ECH / 2);
-                    OldValue = OldValue + ((pParam->Amplitude * FACTEUR_CONVERSION) * 2 + 1)/ (MAX_ECH / 2);
+                    tabSignalValues[i] = (Offset_TD - (step * i)) - (pParam->Offset *FACTEUR_CONVERSION);
                 }
                 else
                 {
-                    //signal = signal - pParam->Offset + (pParam->Amplitude * 2 + 0.5)/(MAX_ECH / 2);
-                    OldValue = OldValue - ((pParam->Amplitude * FACTEUR_CONVERSION) * 2 + 1)/ (MAX_ECH / 2);
+                    tabSignalValues[i] = (Offset_TD - (pParam->Amplitude *FACTEUR_CONVERSION*2))+ (((i - 50)* step) -(pParam->Offset *FACTEUR_CONVERSION)) ;
                 }   
                 break;
                 
             case DENTSCIE:
-                
-                tabSignalValues[i] = ((((pParam->Amplitude *FACTEUR_CONVERSION) * 2) / (MAX_ECH-1)) * i)+ (pParam->Offset *FACTEUR_CONVERSION); 
+                step = (pParam->Amplitude *FACTEUR_CONVERSION *2) / MAX_ECH;
+                tabSignalValues[i] = (Offset_TD - (step * i)) - (pParam->Offset *FACTEUR_CONVERSION)  ; 
 
                 break;
                 
             case SINUS:
-                tabSignalValues[i] = (pParam->Amplitude *FACTEUR_CONVERSION) * sin(2* M_PI * i / (MAX_ECH ))+ SIGNAL_MIDDLE + (pParam->Offset *FACTEUR_CONVERSION);
+                tabSignalValues[i] = (pParam->Amplitude *FACTEUR_CONVERSION) * sin(2* M_PI * i / (MAX_ECH ))+ SIGNAL_MIDDLE - (pParam->Offset *FACTEUR_CONVERSION);
                 break;
         }
 

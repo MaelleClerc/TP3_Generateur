@@ -123,13 +123,13 @@ void MENU_Execute(S_ParamGen *pParam)
             {
                 case 0:
                     
-                    printf_lcd("#Forme = Carre      ");
+                    printf_lcd("#Forme = Sinus       ");
                     
                     break;
                     
                 case 1:
                     
-                    printf_lcd("#Forme = Triangle   ");
+                    printf_lcd("#Forme = Triangle    ");
                     
                     break;
                     
@@ -141,7 +141,7 @@ void MENU_Execute(S_ParamGen *pParam)
                     
                 case 3:
                     
-                    printf_lcd("#Forme = Sinus    ");
+                    printf_lcd("#Forme = Carre      ");
                     
                     break;
             }
@@ -368,7 +368,7 @@ void MENU_Execute(S_ParamGen *pParam)
                 
                 if (Amplitude_Selection == 10100)
                 {
-                    Amplitude_Selection = 100;
+                    Amplitude_Selection = 0;
                 }
             }
             else if (Pec12IsMinus() == 1)
@@ -477,7 +477,7 @@ void MENU_Execute(S_ParamGen *pParam)
             if (Pec12IsOK() == 1)
             {
                 // On valide la valeur choisie
-                pParam->Offset = 0 - Offset_Selection;
+                pParam->Offset = Offset_Selection;
                 
                 // On envoie les nouvelles valeurs au generateur
                 GENSIG_UpdateSignal(pParam);
