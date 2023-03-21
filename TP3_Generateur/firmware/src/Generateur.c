@@ -17,19 +17,25 @@
 // T.P. 2016 100 echantillons
 #define MAX_ECH     100
 #define MAX_AMP     65535
+
+//Valeur d initialisation
 #define FREQ_INIT   20
 #define OFFSET_INIT 0
-#define CONVERSION  10000
-#define FACTEUR_CONVERSION 3.2767
 #define SIGNAL_MIDDLE 32767
 #define AMPLITUDE_INIT 10000
+
+//Facteur de conversion 32767 / 10000
+#define FACTEUR_CONVERSION 3.2767
+
+//Test Offset
 #define MAX_VAL        65535
 #define MIN_VAL        0
 
+//Gestion de la frequence
 #define F_SYS          80000000
 #define PRESCALER      64
 
-//Tableaux
+//Tableaux valeur du signal
 uint32_t tabSignalValues[MAX_ECH] = {0};
 
 // Initialisation du  générateur
@@ -48,18 +54,23 @@ void  GENSIG_UpdatePeriode(S_ParamGen *pParam)
     // Variable locale
     float Val_Periode = 0;
     
+    //Calcul du nb Tic avec la nouvelle frequence
     Val_Periode = (float)F_SYS/(float)(pParam -> Frequence * MAX_ECH * PRESCALER) - 1;
+    
+    //Changer la valeur de la periode
     PLIB_TMR_Period16BitSet(TMR_ID_3, Val_Periode); 
 }
 
 // Mise à jour du signal (forme, amplitude, offset)
 void  GENSIG_UpdateSignal(S_ParamGen *pParam)
 {   
+    //Variables Locale
     int32_t TestAmplitudeMaxMin = 0;
     int i;
     float OldValue = 0;
     float signal;
     
+    //
     for (i = 0; i < MAX_ECH; i++)
     {
         switch (pParam->Forme)
@@ -68,29 +79,24 @@ void  GENSIG_UpdateSignal(S_ParamGen *pParam)
                 if(i < (MAX_ECH / 2))
                 {
                     signal = pParam->Offset + pParam->Amplitude;                  
-                    tabSignalValues[i] = SIGNAL_MIDDLE + signal * FACTEUR_CONVERSION + 0.5;                   
-                    //tabSignalValues[i] = (float)(SIGNAL_MIDDLE + (pParam->Amplitude *((float)SIGNAL_MIDDLE/(float)CONVERSION)) + 1) + (float)(pParam->Offset *((float)SIGNAL_MIDDLE/(float)CONVERSION));
+                    tabSignalValues[i] = SIGNAL_MIDDLE + signal * FACTEUR_CONVERSION + 0.5;                                 
                 }
                 else
-                {
-                    //tabSignalValues[i] = (float)(SIGNAL_MIDDLE - (pParam->Amplitude *((float)SIGNAL_MIDDLE/(float)CONVERSION)))+ (float)(pParam->Offset *((float)SIGNAL_MIDDLE/(float)CONVERSION)));
+                {                    
                     signal = pParam->Offset - pParam->Amplitude;
-
                     tabSignalValues[i] = SIGNAL_MIDDLE + signal * FACTEUR_CONVERSION + 0.5;
                 }              
                 break;
                 
             case TRIANGLE: 
+                
                 tabSignalValues[i] = OldValue + (pParam->Offset *(FACTEUR_CONVERSION));
-                //tabSignalValues[i] = SIGNAL_MIDDLE + signal * FACTEUR_CONVERSION + 0.5;
                 if(i < (MAX_ECH / 2))
-                {
-                    //signal = signal + pParam->Offset + (pParam->Amplitude * 2 + 0.5)/(MAX_ECH / 2);
+                {                    
                     OldValue = OldValue + ((pParam->Amplitude * FACTEUR_CONVERSION) * 2 + 1)/ (MAX_ECH / 2);
                 }
                 else
                 {
-                    //signal = signal - pParam->Offset + (pParam->Amplitude * 2 + 0.5)/(MAX_ECH / 2);
                     OldValue = OldValue - ((pParam->Amplitude * FACTEUR_CONVERSION) * 2 + 1)/ (MAX_ECH / 2);
                 }   
                 break;
@@ -109,7 +115,7 @@ void  GENSIG_UpdateSignal(S_ParamGen *pParam)
     }
     for (i = 0; i < MAX_ECH; i++)
     {
-        TestAmplitudeMaxMin = (int32_t)tabSignalValues[i] ; //- (int32_t)pParam->Offset;
+        TestAmplitudeMaxMin = (int32_t)tabSignalValues[i] ; 
         if(TestAmplitudeMaxMin >= MAX_VAL)
         {
             TestAmplitudeMaxMin = MAX_VAL;
