@@ -42,7 +42,7 @@ void  GENSIG_Initialize(S_ParamGen *pParam)
     //test de la sauvegarde
     if (pParam->Magic != 0x12345678)
     {
-        //Mettre le parametre par defaut
+        //Mettre les parametres par defaut
         pParam->Amplitude = AMPLITUDE_INIT;
         pParam->Forme = DENTSCIE;
         pParam->Frequence = FREQ_INIT;
@@ -69,7 +69,7 @@ void  GENSIG_UpdateSignal(S_ParamGen *pParam)
     int i;
     float signal;
     float step = 0;
-    uint16_t Offset_TD = (pParam->Amplitude * FACTEUR_CONVERSION) + 32767; //pour tirangle et dents de scie
+    uint16_t Offset_TD = (pParam->Amplitude * FACTEUR_CONVERSION) + 32767; //pour triangle et dents de scie
     
     for (i = 0; i < MAX_ECH; i++)
     {
@@ -83,9 +83,7 @@ void  GENSIG_UpdateSignal(S_ParamGen *pParam)
                 }                   
                 else
                 {
-                    
                     signal = -(pParam->Offset) - pParam->Amplitude;
-
                     tabSignalValues[i] = SIGNAL_MIDDLE + signal * FACTEUR_CONVERSION + 0.5;
                 }              
                 break;
@@ -114,6 +112,7 @@ void  GENSIG_UpdateSignal(S_ParamGen *pParam)
         }
 
     }
+    // On test l'amplitude max du signal pour qu'elle n'exede pas les capacité du DAC
     for (i = 0; i < MAX_ECH; i++)
     {
         TestAmplitudeMaxMin = (int32_t)tabSignalValues[i] ; //- (int32_t)pParam->Offset;

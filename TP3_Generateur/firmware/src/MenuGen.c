@@ -524,7 +524,7 @@ void MENU_Execute(S_ParamGen *pParam)
                 {
                     if (CompteurAppuis >= 200)
                     {
-                        // Sauvegarde dans la flash (14 = sizeof de la stucture pParam)
+                        // Sauvegarde dans la flash
                         NVM_WriteBlock((uint32_t*) pParam, sizeof(S_ParamGen));
                         CompteurAppuis = 0;
                         lcd_gotoxy(1, 4);
@@ -535,8 +535,10 @@ void MENU_Execute(S_ParamGen *pParam)
                     {
                         // Retour au menu forme
                         MENU_DATA = MENU_STATE_FORME;
-                        Init_Affichage = 0;
                         CompteurAppuis = 0;
+                        
+                        // On met a jour le flag qui affiche le menu
+                        Init_Affichage = 0;
                     }
                 }
             }
