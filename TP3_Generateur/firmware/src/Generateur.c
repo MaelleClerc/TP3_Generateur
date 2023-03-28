@@ -15,7 +15,7 @@
 #include "Mc32NVMUtil.h"
 #include <math.h>
 
-// T.P. 2016 100 echantillons
+// T.P. 2023 100 echantillons
 #define MAX_ECH     100
 #define MAX_AMP     65535
 #define FREQ_INIT   100
@@ -58,13 +58,17 @@ void  GENSIG_UpdatePeriode(S_ParamGen *pParam)
     // Variable locale
     uint16_t Val_Periode = 0;
     
+    //Calculs fréquence d'échantillonnage
     Val_Periode = F_SYS/(pParam -> Frequence * MAX_ECH * PRESCALER) - 1;
+    
+    //Mettre à jour la fréquence
     PLIB_TMR_Period16BitSet(TMR_ID_3, Val_Periode); 
 }
 
 // Mise à jour du signal (forme, amplitude, offset)
 void  GENSIG_UpdateSignal(S_ParamGen *pParam)
 {   
+    //Explication dans le rapport
     int32_t TestAmplitudeMaxMin = 0;
     int i;
     float signal;
@@ -137,10 +141,13 @@ void  GENSIG_UpdateSignal(S_ParamGen *pParam)
 // Version provisoire pour test du DAC à modifier
 void  GENSIG_Execute(void)
 {
-    
+    //Variable Echantillonage
     static uint16_t EchNb = 0;
     
+    //Envoyer la valeur AU dac
     SPI_WriteToDac(0,tabSignalValues[EchNb]);
+    //Incrémentation de la variable
     EchNb++;
+    //Modulo de la valeur d'echantillionnage 
     EchNb = EchNb % MAX_ECH;
 }
